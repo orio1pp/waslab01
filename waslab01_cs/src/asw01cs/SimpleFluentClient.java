@@ -11,10 +11,14 @@ public class SimpleFluentClient {
 	public final static void main(String[] args) throws Exception {
     	
     	/* Insert code for Task #4 here */
-    	
-    	System.out.println(Request.Get(URI).execute().returnContent());
-    	
+		System.out.println(Request.Post(URI)
+	    .bodyForm(Form.form().add("author",  "oriol").add("tweet_text",  "FirstTweet").build())
+	    .addHeader("Accept", "text/plain").execute().returnContent());
+		
+		
+    	System.out.println(Request.Get(URI).addHeader("Accept", s"text/plains").execute().returnContent());
     	/* Insert code for Task #5 here */
     }
+	
 }
 

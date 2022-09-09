@@ -38,7 +38,6 @@ public class WoTServlet extends HttpServlet {
 			Vector<Tweet> tweets = Database.getTweets();
 			if (request.getHeader("Accept").equals("text/plain")) {
 				printPLAINresult(tweets, request, response);
-				System.out.println("flag");
 			}
 			else 
 				printHTMLresult(tweets, request, response);
@@ -63,7 +62,14 @@ public class WoTServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		response.sendRedirect(request.getContextPath());
+		if(request.getHeader("Accept").equals("text/plain")) {
+			PrintWriter  out = response.getWriter ( );
+			out.print(String.valueOf(null));
+		}
+			
+		else {
+			response.sendRedirect(request.getContextPath());
+		}
 	}
 	private void printPLAINresult(Vector<Tweet> tweets, HttpServletRequest req, HttpServletResponse res) throws IOException {
 		PrintWriter  out = res.getWriter ( );
