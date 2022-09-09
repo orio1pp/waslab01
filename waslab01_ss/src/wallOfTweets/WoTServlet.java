@@ -36,7 +36,13 @@ public class WoTServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			Vector<Tweet> tweets = Database.getTweets();
-			printHTMLresult(tweets, request, response);
+			if (request.getHeader("Accept").equals("text/plain")) {
+				printPLAINresult(tweets, request, response);
+				System.out.println("flag");
+			}
+			else 
+				printHTMLresult(tweets, request, response);
+
 		}
 
 		catch (SQLException ex ) {
@@ -49,11 +55,26 @@ public class WoTServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		// This method does NOTHING but redirect to the main page
-
+		String author = request.getParameter("author");
+		String tweet = request.getParameter("tweet_text");
+		try {
+			Database.insertTweet(author, tweet);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		response.sendRedirect(request.getContextPath());
 	}
-
+	private void printPLAINresult(Vector<Tweet> tweets, HttpServletRequest req, HttpServletResponse res) throws IOException {
+		PrintWriter  out = res.getWriter ( );
+		out.println(tweets.firstElement().getTwid());
+		for (Tweet tweet: tweets) {
+			out.println("tweet #" + tweet.getTwid() + ": " + tweet.getAuthor() + ": " +
+					tweet.getText() + " [" + tweet.getDate() + ']');
+			
+		}
+	}
+	
 	private void printHTMLresult (Vector<Tweet> tweets, HttpServletRequest req, HttpServletResponse res) throws IOException
 	{
 		DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.FULL, currentLocale);
