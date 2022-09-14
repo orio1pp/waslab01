@@ -1,8 +1,13 @@
 package asw01cs;
 
 
+import org.apache.http.client.fluent.Content;
+import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 //This code uses the Fluent API
+
+import org.apache.http.client.fluent.Content;
+import org.apache.http.client.fluent.Form;
 
 public class SimpleFluentClient {
 
@@ -16,7 +21,7 @@ public class SimpleFluentClient {
 	    .addHeader("Accept", "text/plain").execute().returnContent());
 		
 		
-    	System.out.println(Request.Get(URI).addHeader("Accept", s"text/plains").execute().returnContent());
+    	System.out.println(Request.Get(URI).addHeader("Accept", "text/plains").execute().returnContent());
     	/* Insert code for Task #5 here */
     }
 	
