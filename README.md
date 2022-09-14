@@ -4,4 +4,4 @@ Students:
 
 * Portell Pareras, Oriol
 
-* Lozan Aparicio, Alejandro
+* Lozano Aparicio, Alejandro
