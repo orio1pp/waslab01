@@ -53,21 +53,32 @@ public class WoTServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		String author = request.getParameter("author");
-		String tweet = request.getParameter("tweet_text");
 		Long tweetID = null;
+		String tweetIDreq = request.getParameter("tweetID");
+		
 		try {
-			tweetID = Database.insertTweet(author, tweet);
-		} catch (SQLException e) {
+			if (tweetIDreq != null) {
+				Database.deleteTweet(Long.parseLong(tweetIDreq));
+			}
+			else {
+				String author = request.getParameter("author");
+				String tweet = request.getParameter("tweet_text");
+				tweetID = Database.insertTweet(author, tweet);
+			}
+			
+		}
+		
+		catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		
+		
 		if(request.getHeader("Accept").equals("text/plain")) {
 			PrintWriter  out = response.getWriter ( );
 			out.print(String.valueOf(tweetID));
-		}
-			
+		}	
 		else {
 			response.sendRedirect(request.getContextPath());
 		}
@@ -113,6 +124,7 @@ public class WoTServlet extends HttpServlet {
 			out.println("<div class=\"wallitem\">");
 			out.println("<h4><em>" + tweet.getAuthor() + "</em> @ "+ timeFormatter.format(tweet.getDate()) +"</h4>");
 			out.println("<p>" + tweet.getText() + "</p>");
+			out.println("<input type=\"hidden\" name=\"tweetID\" value=" + tweet.getTwid() + ">");
 			out.println("<input type=\"submit\" name=\"action\" value=\"Delete\">");
 			out.println("</div>");
 		}
