@@ -22,6 +22,7 @@ public class WoTServlet extends HttpServlet {
 	Locale currentLocale = new Locale("en");
 	String ENCODING = "ISO-8859-1";
 
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -55,7 +56,7 @@ public class WoTServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Long tweetID = null;
 		String tweetIDreq = request.getParameter("tweetID");
-		
+		Database.deleteTweet(Long.parseLong(tweetIDreq));
 		try {
 			if (tweetIDreq != null) {
 				Database.deleteTweet(Long.parseLong(tweetIDreq));
@@ -124,8 +125,10 @@ public class WoTServlet extends HttpServlet {
 			out.println("<div class=\"wallitem\">");
 			out.println("<h4><em>" + tweet.getAuthor() + "</em> @ "+ timeFormatter.format(tweet.getDate()) +"</h4>");
 			out.println("<p>" + tweet.getText() + "</p>");
+			out.println("<form method=\"post\">");
 			out.println("<input type=\"hidden\" name=\"tweetID\" value=" + tweet.getTwid() + ">");
 			out.println("<input type=\"submit\" name=\"action\" value=\"Delete\">");
+			out.println("</form>");
 			out.println("</div>");
 		}
 		out.println ( "</body></html>" );
