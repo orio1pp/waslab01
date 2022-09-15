@@ -2,11 +2,15 @@ package wallOfTweets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.util.Locale;
 import java.util.Vector;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -56,15 +60,22 @@ public class WoTServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Long tweetID = null;
 		String tweetIDreq = request.getParameter("tweetID");
-		Database.deleteTweet(Long.parseLong(tweetIDreq));
 		try {
 			if (tweetIDreq != null) {
-				Database.deleteTweet(Long.parseLong(tweetIDreq));
+				Cookie[] cookieList = request.getCookies();
+				if(cookieList.length != 0) {
+					for(Cookie cookie : cookieList) {
+						if(cookie.getValue().equals(encriptarTweet(tweetIDreq.toString())))
+							Database.deleteTweet(Long.parseLong(tweetIDreq));
+					}
+				}
+					
 			}
 			else {
 				String author = request.getParameter("author");
 				String tweet = request.getParameter("tweet_text");
 				tweetID = Database.insertTweet(author, tweet);
+				response.addCookie(new Cookie("id" + tweetID.toString(), encriptarTweet(tweetID.toString())));
 			}
 			
 		}
@@ -132,5 +143,26 @@ public class WoTServlet extends HttpServlet {
 			out.println("</div>");
 		}
 		out.println ( "</body></html>" );
+	}
+	
+	private static String encriptarTweet(String tweetString) {
+		try {
+			MessageDigest digest = MessageDigest.getInstance("SHA-256");
+			byte[] hash = digest.digest(
+					tweetString.getBytes(StandardCharsets.UTF_8));
+			    StringBuilder hexString = new StringBuilder(2 * hash.length);
+			    for (int i = 0; i < hash.length; i++) {
+			        String hex = Integer.toHexString(0xff & hash[i]);
+			        if(hex.length() == 1) {
+			            hexString.append('0');
+			        }
+			        hexString.append(hex);
+			    }
+			    return hexString.toString();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			return "";
+		}
+
 	}
 }
