@@ -56,15 +56,16 @@ public class WoTServlet extends HttpServlet {
 
 		String author = request.getParameter("author");
 		String tweet = request.getParameter("tweet_text");
+		Long tweetID = null;
 		try {
-			Database.insertTweet(author, tweet);
+			tweetID = Database.insertTweet(author, tweet);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if(request.getHeader("Accept").equals("text/plain")) {
 			PrintWriter  out = response.getWriter ( );
-			out.print(String.valueOf(null));
+			out.print(String.valueOf(tweetID));
 		}
 			
 		else {

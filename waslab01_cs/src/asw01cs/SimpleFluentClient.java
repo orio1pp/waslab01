@@ -16,12 +16,13 @@ public class SimpleFluentClient {
 	public final static void main(String[] args) throws Exception {
     	
     	/* Insert code for Task #4 here */
-		System.out.println(Request.Post(URI)
+		String nextTweet = Request.Post(URI)
 	    .bodyForm(Form.form().add("author", "alex").add("tweet_text", "FirstTweet").build())
-	    .addHeader("Accept", "text/plain").execute().returnContent());
+	    .addHeader("Accept", "text/plain").execute().returnContent().asString().trim();
+		System.out.println(nextTweet);
+
 		
-		
-    	System.out.println(Request.Get(URI).addHeader("Accept", "text/plains").execute().returnContent());
+    	System.out.println(Request.Get(URI).addHeader("Accept", "text/plain").execute().returnContent());
     	/* Insert code for Task #5 here */
     }
 	
